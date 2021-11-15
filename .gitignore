@@ -1,0 +1,3 @@
+# gitの管理に含めないfile
+config/apidef.yaml
+config/kabustapi.yaml

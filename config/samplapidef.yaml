@@ -1,0 +1,59 @@
+#apiPasword
+apiPassword:
+    - 'taroxxxxx'
+    - 'taroxxxxx'
+#REQUEST BODY
+RequestToken:
+    APIPassword:
+
+#REQUEST BODY
+RequestSendOrder:
+    Password: 'taroxxxxxxx'
+    Symbol:
+    Exchange:
+    TradeType:
+    TimeInForce:
+    Side:
+    Qty:
+    FrontOrderType:
+    Price:
+    ExpireDay:
+
+RequestPaySendOrder:
+    Password: 'taroxxxxxxx'
+    Symbol:
+    Exchange:
+    TradeType:
+    TimeInForce:
+    Side:
+    Qty:
+    ClosePositions:
+    - HoldID:
+      Qty:
+    FrontOrderType:
+    Price:
+    ExpireDay:
+
+#REQUEST BODY
+RequestCancelOrder:
+    OrderId:
+    Password: 'taroxxxxxxx'
+#Query parameter
+RequestOrder:
+    product:
+
+#REQUEST BODY array
+RequestRegister:
+    Symbols:
+    - Symbol
+    - Exchange
+
+#Path parameter
+RequestBoard:
+    Symbols:
+    - Symbol
+    - Exchange
+
+
+
+
