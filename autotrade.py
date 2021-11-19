@@ -198,7 +198,7 @@ class autotrad(form.formn225):
         print(self.webclient.sock)
         if self.webclient.sock == None:
             self.webclient = webclient()
-            self.weborder = weborder.weborder()
+            self.weborder = weborder()
             # 本番はself.weborder.handweborder=self.trading.weborder とする
             self.weborder.handweborder = self.trade.weborder
             # self.weborder.handweborder = self.weborder.handlertest
@@ -236,17 +236,10 @@ class autotrad(form.formn225):
             self.auto.set('自動')
             # マルチチャートデータをリセットしてからスタートする
             self.trade.autotrade = True
-            self.trade.autoState = 0  # auto Trade 遷移ステータス
         else:
             self.auto.set('手動')
             # auto Trade stop
             self.trade.autotrade = False
-            self.trade.autoState = 0  # auto Trade 遷移ステータス
-            if self.trade.exitsign:
-                self.trade.exitsign = False
-                self.testButton.set('引SET')
-            else:
-                self.testButton.set('引SET')
 
     def btn2_click(self):
         # 新規売発注ボタンイベント
@@ -337,14 +330,7 @@ class autotrad(form.formn225):
 
             # 引数　tradetype: 1 新規　2,3 返済, Side：1 売り ２買い, ordertype: 0 指値　1 成行
             status, orderid = self.trade.send_order(autotype, tradetype, side, price, orderQty, ordertype, ExecutionID)
-            """
-            if status == 200:
-                # 約定照会へ
-                self.trad.autoState = 10
-            else:
-                self.WriteMassege(str(datetime.now()) + '　返済売買発注エラー')
-                self.trad.autoState = 0
-            """
+
         else:
             self.WriteMassege(str(datetime.now()) + '　返済データは選択されていません')
 

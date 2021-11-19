@@ -1,3 +1,9 @@
 # gitの管理に含めないfile
 config/apidef.yaml
 config/kabustapi.yaml
+docs/newversiondocs.xlsx
+newformn225.py
+newtrade.py
+newautotrade.py
+n225trader/trade_lib/newweborder.py
+

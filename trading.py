@@ -76,7 +76,6 @@ class trade(threading.Thread):
         # 日中/夜間　引け建玉EXIT時間とサイン
         self.exittime1 = datetime.strptime('15:00:00', '%H:%M:%S').time()
         self.exittime2 = datetime.strptime('04:00:00', '%H:%M:%S').time()
-        self.exitsign = False
         self.time_now = datetime.now().time().replace(microsecond=0)  # 現在の時刻
         self.datetime_now = datetime.now().replace(microsecond=0).strftime('%y-%m-%d %H:%M')
         self.API = stapi()
@@ -113,14 +112,13 @@ class trade(threading.Thread):
         self.History = pd.DataFrame(columns=['AutoType', 'datetime', 'tradeType', 'side', 'qty', 'price', 'ExecutionID'])
         # autotradコントロール
         self.autotrade = False
-        self.autoState = 0
         # trade Loop 監視
         self.loopalert = 0          # １秒ごとにカウントする
         # トレード関係の変数
         self.marketPosition = 0
         self.longPosition = 0
         self.shortPosition = 0
-        self.curentPrice = 0        # autotrade(メイン)から設定される
+        self.curentPrice = 0        # (メイン)から設定される
         #
         self.initial()
 
@@ -228,8 +226,7 @@ class trade(threading.Thread):
                             elif CashMargin == CASHMARGIN['返済']:
                                 result = self.checklist(ID, Detail, AutoType, tradetype, Side, "Non ExecutionID", CashMargin)
 
-                    # 照会スタート
-                    self.autoState = 10
+
                     # ordersBox.append(item)
             # 自動トレードデータを読み込みデータフレームの初期化とdfinfo1,dfinfo2のAutoTypeを更新する
             if os.path.isfile(AutoTradeList):
@@ -698,6 +695,8 @@ class trade(threading.Thread):
 
     # webhook order 処理
     def weborder(self, sender):
+        if not self.autotrade:
+            return
         side = sender[0]
         orderqty = sender[1]
         tradetype = sender[2]
@@ -778,7 +777,7 @@ class trade(threading.Thread):
         self.handler(self.handInsrtInfo, hndData)
         # 終了
         self.handler(self.handMessage, self.datetime_now + '　取り消し注文処理終了')
-        self.autoState = 0
+
         return
 
     def checklist(self,orderId, Detail,AutoType,tradetype,side,ExecutionID,CashMargin):

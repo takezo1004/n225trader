@@ -30,19 +30,15 @@ class Webhookclient(threading.Thread):
         if func != None:
             func(*args)
 
-    def send_order(self,msg):
-        time = msg['time']
-        symbol = msg['ticker']
-        interval =msg['interval']
-        side = msg['strategy']['order_action']
-        qty = msg['strategy']['order_contracts']
-        marketposition = msg['strategy']['market_position']
-        prevmarketposition = msg['strategy']['prev_market_position']
-        marketposition_size = msg['strategy']['market_position_size']
-        prevmarketposition_size = msg['strategy']['prev_market_position_size']
-        strmssg = "recive alert 時間 {0} 銘柄名: {1} {2}分足 : {3} : {4}枚 : marketposition:{5} prevmarketposition:{6}".format(time,symbol,interval,side,qty,marketposition,prevmarketposition)
-        print(strmssg)
-        self.handler(self.sendorder, [side,qty,marketposition,marketposition_size,prevmarketposition,prevmarketposition_size])
+    def send_order(self,recivedata):
+        # byte型をstr型に変換する
+        msg = recivedata.decode()
+        # print(type(msg))
+
+        # 辞書型に変換する
+        msg =json.loads(msg)
+        # print(type(msg))
+        self.handler(self.sendorder,msg)
 
     def stop(self):
         if self.sock != None:
@@ -51,20 +47,20 @@ class Webhookclient(threading.Thread):
     def run(self):
         while True:
             try:
-                data =self.sock.recv(1024)
+                # byte型をstr型に変換する
+                recivedata =self.sock.recv(2048)
             except OSError as msg:
                 # print(msg)
                 print("webhookclient down error msg:{0}".format(msg))
+                self.sock.close()
                 self.sock = None
                 break
-            # 受信データはbyte型なのでstr型に変換する
-            msg = data.decode()
-            #辞書型に変換する
-            msg =json.loads(msg)
-
-            self.send_order(msg)
-            # print(msg['strategy']['order_action'])
-
+            else:
+                if len(recivedata) > 0:
+                    # print(type(recivedata),len(recivedata))
+                    self.send_order(recivedata)
+                else:
+                    break
         print('webhookclient close')
 
 if __name__ == '__main__':
